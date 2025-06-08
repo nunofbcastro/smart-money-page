@@ -7,6 +7,12 @@ on:
   pull_request:
     branches: [ main ]
 
+# Add permissions to allow GitHub Actions to write to the repository
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

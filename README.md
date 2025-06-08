@@ -1,4 +1,7 @@
+
 # Welcome to your Lovable project
+
+> **Nota**: Este projeto foi criado como um teste da plataforma Lovable para demonstrar as capacidades de desenvolvimento de aplicações web com IA.
 
 ## Project info
 
@@ -62,7 +65,21 @@ This project is built with:
 
 ## How can I deploy this project?
 
+**Lovable Deploy**
 Simply open [Lovable](https://lovable.dev/projects/60a473b2-50f4-4524-bccf-8ae2a42696ae) and click on Share -> Publish.
+
+**GitHub Pages**
+This project includes a GitHub Actions workflow that automatically deploys to GitHub Pages when you push to the main branch.
+
+**Docker**
+You can also run this project using Docker:
+```sh
+# Build the Docker image
+docker build -t smart-money-page .
+
+# Run the container
+docker run -p 80:80 smart-money-page
+```
 
 ## Can I connect a custom domain to my Lovable project?
 
