@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,8 +26,10 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#00C851',
+					dark: '#00A142',
+					light: '#33D974',
+					foreground: '#ffffff'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -51,6 +54,11 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				dark: {
+					DEFAULT: '#121212',
+					lighter: '#1a1a1a',
+					light: '#2a2a2a'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -84,11 +92,48 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'gradient-shift': {
+					'0%, 100%': {
+						backgroundPosition: '0% 50%'
+					},
+					'50%': {
+						backgroundPosition: '100% 50%'
+					}
+				},
+				'fade-in-up': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(20px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-green': {
+					'0%, 100%': {
+						boxShadow: '0 0 0 0 rgba(0, 200, 81, 0.4)'
+					},
+					'50%': {
+						boxShadow: '0 0 0 10px rgba(0, 200, 81, 0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'gradient-shift': 'gradient-shift 6s ease-in-out infinite',
+				'fade-in-up': 'fade-in-up 0.6s ease-out',
+				'pulse-green': 'pulse-green 2s infinite'
+			},
+			backgroundImage: {
+				'gradient-primary': 'linear-gradient(135deg, #00C851 0%, #00A142 100%)',
+				'gradient-animated': 'linear-gradient(-45deg, #00C851, #00A142, #33D974, #00C851)',
+				'gradient-dark': 'linear-gradient(135deg, #121212 0%, #1a1a1a 100%)'
+			},
+			backgroundSize: {
+				'400%': '400% 400%'
 			}
 		}
 	},
