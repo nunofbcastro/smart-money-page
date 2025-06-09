@@ -1,14 +1,18 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTransactions } from '@/contexts/TransactionContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LogOut, TrendingUp, TrendingDown, DollarSign, CreditCard } from 'lucide-react';
+import AddTransactionForm from '@/components/AddTransactionForm';
+import TransactionList from '@/components/TransactionList';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const { transactions } = useTransactions();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,43 +20,53 @@ const Dashboard = () => {
     navigate('/');
   };
 
+  // Calculate statistics from real transactions
+  const totalIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const totalExpenses = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const balance = totalIncome - totalExpenses;
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(amount);
+  };
+
   const stats = [
     {
       title: "Saldo Total",
-      value: "R$ 15.847,32",
-      change: "+12.5%",
-      trend: "up",
+      value: formatCurrency(balance),
+      change: balance >= 0 ? "Positivo" : "Negativo",
+      trend: balance >= 0 ? "up" : "down",
       icon: DollarSign,
     },
     {
       title: "Receitas",
-      value: "R$ 8.450,00",
-      change: "+8.2%",
+      value: formatCurrency(totalIncome),
+      change: `${transactions.filter(t => t.type === 'income').length} transações`,
       trend: "up",
       icon: TrendingUp,
     },
     {
       title: "Despesas",
-      value: "R$ 3.280,15",
-      change: "-4.1%",
+      value: formatCurrency(totalExpenses),
+      change: `${transactions.filter(t => t.type === 'expense').length} transações`,
       trend: "down",
       icon: TrendingDown,
     },
     {
-      title: "Cartão de Crédito",
-      value: "R$ 1.247,89",
-      change: "Fatura atual",
+      title: "Total de Transações",
+      value: transactions.length.toString(),
+      change: "Registros",
       trend: "neutral",
       icon: CreditCard,
     },
-  ];
-
-  const recentTransactions = [
-    { id: 1, description: "Salário", amount: "+R$ 5.000,00", date: "08/06/2025", type: "income" },
-    { id: 2, description: "Supermercado", amount: "-R$ 234,50", date: "07/06/2025", type: "expense" },
-    { id: 3, description: "Freelance", amount: "+R$ 1.500,00", date: "06/06/2025", type: "income" },
-    { id: 4, description: "Gasolina", amount: "-R$ 120,00", date: "05/06/2025", type: "expense" },
-    { id: 5, description: "Internet", amount: "-R$ 89,90", date: "04/06/2025", type: "expense" },
   ];
 
   return (
@@ -108,37 +122,13 @@ const Dashboard = () => {
           })}
         </div>
 
-        {/* Recent Transactions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Transações Recentes</CardTitle>
-            <CardDescription>
-              Suas últimas movimentações financeiras
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentTransactions.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-3 h-3 rounded-full ${
-                      transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
-                    }`} />
-                    <div>
-                      <p className="font-medium">{transaction.description}</p>
-                      <p className="text-sm text-gray-500">{transaction.date}</p>
-                    </div>
-                  </div>
-                  <div className={`font-semibold ${
-                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {transaction.amount}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Add Transaction Form */}
+        <div className="mb-8">
+          <AddTransactionForm />
+        </div>
+
+        {/* Transactions List */}
+        <TransactionList />
       </main>
     </div>
   );
