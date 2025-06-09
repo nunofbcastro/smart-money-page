@@ -8,9 +8,15 @@ import { Trash2 } from 'lucide-react';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
 
-const TransactionList = () => {
-  const { transactions, removeTransaction } = useTransactions();
+interface TransactionListProps {
+  limit?: number;
+}
+
+const TransactionList: React.FC<TransactionListProps> = ({ limit }) => {
+  const { transactions, removeTransaction, categories, accounts, familyMembers } = useTransactions();
   const { toast } = useToast();
+
+  const displayTransactions = limit ? transactions.slice(0, limit) : transactions;
 
   const handleRemoveTransaction = (id: string, description: string) => {
     removeTransaction(id);
@@ -31,7 +37,24 @@ const TransactionList = () => {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  if (transactions.length === 0) {
+  const getCategoryName = (categoryId?: string) => {
+    if (!categoryId) return '-';
+    const category = categories.find(cat => cat.id === categoryId);
+    return category?.name || '-';
+  };
+
+  const getAccountName = (accountId: string) => {
+    const account = accounts.find(acc => acc.id === accountId);
+    return account?.name || 'Conta não encontrada';
+  };
+
+  const getMemberName = (memberId?: string) => {
+    if (!memberId) return '-';
+    const member = familyMembers.find(mem => mem.id === memberId);
+    return member?.name || '-';
+  };
+
+  if (displayTransactions.length === 0) {
     return (
       <Card>
         <CardHeader>
@@ -52,9 +75,11 @@ const TransactionList = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Transações ({transactions.length})</CardTitle>
+        <CardTitle>
+          Transações {limit ? `(${displayTransactions.length} recentes)` : `(${displayTransactions.length})`}
+        </CardTitle>
         <CardDescription>
-          Histórico de todas as suas movimentações
+          {limit ? 'Últimas movimentações registradas' : 'Histórico de todas as suas movimentações'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -64,20 +89,28 @@ const TransactionList = () => {
               <TableRow>
                 <TableHead>Descrição</TableHead>
                 <TableHead>Categoria</TableHead>
+                <TableHead>Conta</TableHead>
+                <TableHead>Responsável</TableHead>
                 <TableHead>Data</TableHead>
                 <TableHead>Tipo</TableHead>
                 <TableHead className="text-right">Valor</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
+                {!limit && <TableHead className="text-center">Ações</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.map((transaction) => (
+              {displayTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell className="font-medium">
                     {transaction.description}
                   </TableCell>
                   <TableCell>
-                    {transaction.category || '-'}
+                    {getCategoryName(transaction.categoryId)}
+                  </TableCell>
+                  <TableCell>
+                    {getAccountName(transaction.accountId)}
+                  </TableCell>
+                  <TableCell>
+                    {getMemberName(transaction.memberId)}
                   </TableCell>
                   <TableCell>
                     {formatDate(transaction.date)}
@@ -95,16 +128,18 @@ const TransactionList = () => {
                     {transaction.type === 'income' ? '+' : '-'}
                     {formatCurrency(transaction.amount)}
                   </TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveTransaction(transaction.id, transaction.description)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </TableCell>
+                  {!limit && (
+                    <TableCell className="text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveTransaction(transaction.id, transaction.description)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
