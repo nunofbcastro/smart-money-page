@@ -142,7 +142,7 @@ const AddTransactionForm = () => {
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Sem categoria</SelectItem>
+                  <SelectItem value="none">Sem categoria</SelectItem>
                   {filteredCategories.map(category => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
@@ -182,7 +182,7 @@ const AddTransactionForm = () => {
                     <SelectValue placeholder="Selecione um membro" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Não especificado</SelectItem>
+                    <SelectItem value="none">Não especificado</SelectItem>
                     {familyMembers.map(member => (
                       <SelectItem key={member.id} value={member.id}>
                         {member.name}

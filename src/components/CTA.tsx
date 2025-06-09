@@ -42,7 +42,7 @@ const CTA = () => {
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold"
+            className="border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold bg-transparent"
           >
             {text.trial}
           </Button>
