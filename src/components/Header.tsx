@@ -3,9 +3,22 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
 
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
@@ -23,18 +36,30 @@ const Header = () => {
 
           {/* Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#about" className="text-gray-600 hover:text-primary transition-colors">
+            <button 
+              onClick={() => scrollToSection('about')} 
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
               {t('about')}
-            </a>
-            <a href="#features" className="text-gray-600 hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('features')} 
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
               {t('features')}
-            </a>
-            <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('pricing')} 
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
               {t('pricing')}
-            </a>
-            <a href="#testimonials" className="text-gray-600 hover:text-primary transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('testimonials')} 
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
               {t('testimonials')}
-            </a>
+            </button>
           </nav>
 
           {/* Language Toggle & CTA */}
@@ -51,6 +76,7 @@ const Header = () => {
             <Button 
               className="bg-gradient-primary hover:bg-primary-dark text-white font-medium"
               size="sm"
+              onClick={handleLoginClick}
             >
               {t('startNow')}
             </Button>
