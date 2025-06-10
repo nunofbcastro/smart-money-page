@@ -50,13 +50,13 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-white">
+    <section id="pricing" className="py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {t('pricingTitle')}
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-muted-foreground">
             Planos simples e transparentes para todos os tipos de utilizadores
           </p>
         </div>
@@ -65,10 +65,10 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <div 
               key={index}
-              className={`relative bg-white rounded-2xl border-2 p-8 transition-all duration-300 hover:-translate-y-2 ${
+              className={`relative bg-card rounded-2xl border-2 p-8 transition-all duration-300 hover:-translate-y-2 ${
                 plan.popular 
                   ? 'border-primary shadow-2xl scale-105' 
-                  : 'border-gray-200 hover:border-primary/50 shadow-lg hover:shadow-xl'
+                  : 'border-border hover:border-primary/50 shadow-lg hover:shadow-xl'
               }`}
             >
               {/* Popular badge */}
@@ -83,10 +83,10 @@ const Pricing = () => {
 
               {/* Plan header */}
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-dark mb-4">{plan.name}</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-4">{plan.name}</h3>
                 <div className="flex items-center justify-center">
-                  <span className="text-4xl font-bold text-dark">€{plan.price}</span>
-                  <span className="text-gray-600 ml-2">{t('monthly')}</span>
+                  <span className="text-4xl font-bold text-foreground">€{plan.price}</span>
+                  <span className="text-muted-foreground ml-2">{t('monthly')}</span>
                 </div>
               </div>
 
@@ -95,7 +95,7 @@ const Pricing = () => {
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-center">
                     <Check className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
-                    <span className="text-gray-700">{feature}</span>
+                    <span className="text-muted-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -105,7 +105,7 @@ const Pricing = () => {
                 className={`w-full py-4 text-lg font-semibold ${
                   plan.popular
                     ? 'bg-gradient-primary hover:bg-primary-dark text-white'
-                    : 'bg-gray-100 hover:bg-gray-200 text-dark'
+                    : 'bg-muted hover:bg-muted/80 text-foreground'
                 }`}
               >
                 {t('subscribe')}
@@ -116,11 +116,11 @@ const Pricing = () => {
 
         {/* Money back guarantee */}
         <div className="mt-16 text-center">
-          <div className="bg-gray-50 rounded-2xl p-8 max-w-2xl mx-auto">
-            <h4 className="text-xl font-semibold text-dark mb-4">
+          <div className="bg-muted/50 rounded-2xl p-8 max-w-2xl mx-auto border border-border">
+            <h4 className="text-xl font-semibold text-foreground mb-4">
               Garantia de 30 dias
             </h4>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Se não ficares satisfeito com o nosso serviço, devolvemos o teu dinheiro sem questões.
             </p>
           </div>

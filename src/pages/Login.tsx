@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/components/LanguageContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,30 +38,30 @@ const Login = () => {
               <span className="text-white font-bold text-2xl">€</span>
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">Gestão de Finanças</CardTitle>
+          <CardTitle className="text-2xl text-center">{t('financialManagement')}</CardTitle>
           <CardDescription className="text-center">
-            Entre com suas credenciais para acessar o dashboard
+            {t('enterCredentials')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Usuário</Label>
+              <Label htmlFor="username">{t('username')}</Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="Digite seu usuário"
+                placeholder={t('enterUsername')}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Digite sua senha"
+                placeholder={t('enterPassword')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -70,14 +72,14 @@ const Login = () => {
               className="w-full bg-gradient-primary hover:bg-primary-dark"
               disabled={isLoading}
             >
-              {isLoading ? "Entrando..." : "Entrar"}
+              {isLoading ? t('entering') : t('enter')}
             </Button>
           </form>
           <div className="mt-4 p-3 bg-muted rounded-md">
             <p className="text-sm text-muted-foreground text-center">
-              <strong>Credenciais de teste:</strong><br />
-              Usuário: user123<br />
-              Senha: user123
+              <strong>{t('testCredentials')}</strong><br />
+              {t('user')}<br />
+              {t('pass')}
             </p>
           </div>
         </CardContent>

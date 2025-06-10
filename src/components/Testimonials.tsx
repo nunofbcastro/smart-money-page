@@ -32,13 +32,13 @@ const Testimonials = () => {
   ];
 
   return (
-    <section id="testimonials" className="py-20 bg-gray-50">
+    <section id="testimonials" className="py-20 bg-muted/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {t('testimonialsTitle')}
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-muted-foreground">
             Histórias reais de pessoas que transformaram as suas finanças
           </p>
         </div>
@@ -47,7 +47,7 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div 
               key={index}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 relative"
+              className="bg-card rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 relative border border-border"
             >
               {/* Quote icon */}
               <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/20" />
@@ -58,7 +58,7 @@ const Testimonials = () => {
               </div>
 
               {/* Testimonial text */}
-              <blockquote className="text-gray-700 text-lg mb-8 leading-relaxed">
+              <blockquote className="text-muted-foreground text-lg mb-8 leading-relaxed">
                 "{testimonial.text}"
               </blockquote>
 
@@ -70,8 +70,8 @@ const Testimonials = () => {
                   className="w-12 h-12 rounded-full object-cover mr-4"
                 />
                 <div>
-                  <div className="font-semibold text-dark">{testimonial.name}</div>
-                  <div className="text-gray-600 text-sm">{testimonial.role}</div>
+                  <div className="font-semibold text-foreground">{testimonial.name}</div>
+                  <div className="text-muted-foreground text-sm">{testimonial.role}</div>
                 </div>
               </div>
             </div>
@@ -80,7 +80,7 @@ const Testimonials = () => {
 
         {/* Trust indicators */}
         <div className="mt-16 text-center">
-          <div className="flex items-center justify-center space-x-8 text-gray-400">
+          <div className="flex items-center justify-center space-x-8 text-muted-foreground">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">4.9/5</div>
               <div className="text-sm">Avaliação Média</div>

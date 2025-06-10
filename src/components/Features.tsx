@@ -34,14 +34,14 @@ const Features = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {t('featuresTitle')}
           </h2>
-          <p className="text-xl text-gray-600">
-            Descobre as funcionalidades que vão transformar a tua gestão financeira
+          <p className="text-xl text-muted-foreground">
+            {t('featuresDescription')}
           </p>
         </div>
 
@@ -49,7 +49,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="group relative overflow-hidden bg-white rounded-2xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+              className="group relative overflow-hidden bg-card rounded-2xl border border-border p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
             >
               {/* Background gradient on hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
@@ -59,11 +59,11 @@ const Features = () => {
                   <feature.icon className="w-8 h-8 text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-dark mb-4 group-hover:text-primary transition-colors">
+                <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
                 
-                <p className="text-gray-600 text-lg leading-relaxed">
+                <p className="text-muted-foreground text-lg leading-relaxed">
                   {feature.description}
                 </p>
 

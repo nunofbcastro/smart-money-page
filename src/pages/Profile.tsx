@@ -25,8 +25,8 @@ const Profile = () => {
 
   const handleSaveProfile = () => {
     toast({
-      title: "Perfil atualizado",
-      description: "Suas configurações foram salvas com sucesso.",
+      title: t('saveChanges'),
+      description: "As suas configurações foram guardadas com sucesso.",
     });
   };
 
@@ -38,9 +38,9 @@ const Profile = () => {
   ];
 
   const themeOptions = [
-    { value: 'system', label: 'Sistema', icon: Monitor },
-    { value: 'light', label: 'Claro', icon: Sun },
-    { value: 'dark', label: 'Escuro', icon: Moon }
+    { value: 'system', label: t('system'), icon: Monitor },
+    { value: 'light', label: t('light'), icon: Sun },
+    { value: 'dark', label: t('dark'), icon: Moon }
   ];
 
   return (
@@ -55,7 +55,7 @@ const Profile = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">{t('profile')}</h1>
-                <p className="text-sm text-muted-foreground">Gerencie suas configurações pessoais</p>
+                <p className="text-sm text-muted-foreground">Gere as suas configurações pessoais</p>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ const Profile = () => {
                   id="username"
                   value={profileData.username}
                   onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
-                  placeholder="Seu nome de usuário"
+                  placeholder="O seu nome de utilizador"
                 />
               </div>
 
@@ -93,7 +93,7 @@ const Profile = () => {
                   id="name"
                   value={profileData.name}
                   onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                  placeholder="Seu nome completo"
+                  placeholder="O seu nome completo"
                 />
               </div>
 
