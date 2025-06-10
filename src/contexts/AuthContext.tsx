@@ -1,9 +1,15 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+interface User {
+  username: string;
+  email: string;
+  name: string;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { username: string } | null;
+  user: User | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
 }
@@ -20,7 +26,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('auth');
@@ -33,7 +39,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = (username: string, password: string): boolean => {
     if (username === 'user123' && password === 'user123') {
-      const userData = { username };
+      const userData: User = { 
+        username,
+        email: 'user123@example.com',
+        name: 'Usuário Demo'
+      };
       setIsAuthenticated(true);
       setUser(userData);
       localStorage.setItem('auth', JSON.stringify({ isAuthenticated: true, user: userData }));
