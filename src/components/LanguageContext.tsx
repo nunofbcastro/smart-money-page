@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'pt' | 'en' | 'es' | 'fr';
@@ -14,6 +13,9 @@ interface LanguageContextType {
 
 const translations = {
   pt: {
+    // App Name
+    appName: "FinanceFlow",
+
     // Hero
     heroTitle: "Domina as tuas Finanças com Clareza e Confiança",
     heroSubtitle: "Ferramentas e formação para controlares o teu dinheiro como um profissional. Gestão inteligente e educação financeira.",
@@ -30,6 +32,7 @@ const translations = {
     dashboard: "Painel",
     language: "Idioma",
     theme: "Tema",
+    testimonials: "Testemunhos",
 
     // Dashboard
     overview: "Visão Geral",
@@ -61,7 +64,7 @@ const translations = {
     actions: "Ações",
 
     // Login
-    financialManagement: "Gestão de Finanças",
+    financialManagement: "FinanceFlow",
     enterCredentials: "Introduz as tuas credenciais para aceder ao painel",
     username: "Utilizador",
     enterUsername: "Introduz o teu utilizador",
@@ -110,6 +113,18 @@ const translations = {
     mostPopular: "Mais Popular",
     subscribe: "Subscrever",
 
+    // FAQ
+    faqTitle: "Perguntas Frequentes",
+    faqDescription: "Respostas às perguntas mais frequentes sobre a nossa plataforma",
+    stillHaveQuestions: "Ainda tens dúvidas?",
+    contactUs: "Contacta-nos",
+
+    // Footer
+    copyright: "© 2024 FinanceFlow. Todos os direitos reservados.",
+    terms: "Termos de Uso",
+    privacy: "Política de Privacidade",
+    cookies: "Cookies",
+
     // Common
     currency: "Moeda",
     save: "Guardar",
@@ -126,6 +141,9 @@ const translations = {
     dark: "Escuro"
   },
   en: {
+    // App Name
+    appName: "FinanceFlow",
+
     // Hero  
     heroTitle: "Master Your Finances with Clarity and Confidence",
     heroSubtitle: "Tools and training to control your money like a professional. Smart management and financial education.",
@@ -142,6 +160,7 @@ const translations = {
     dashboard: "Dashboard",
     language: "Language",
     theme: "Theme",
+    testimonials: "Testimonials",
 
     // Dashboard
     overview: "Overview",
@@ -173,7 +192,7 @@ const translations = {
     actions: "Actions",
 
     // Login
-    financialManagement: "Financial Management",
+    financialManagement: "FinanceFlow",
     enterCredentials: "Enter your credentials to access the dashboard",
     username: "Username",
     enterUsername: "Enter your username",
@@ -222,6 +241,18 @@ const translations = {
     mostPopular: "Most Popular",
     subscribe: "Subscribe",
 
+    // FAQ
+    faqTitle: "Frequently Asked Questions",
+    faqDescription: "Answers to the most common questions about our platform",
+    stillHaveQuestions: "Still have questions?",
+    contactUs: "Contact us",
+
+    // Footer
+    copyright: "© 2024 FinanceFlow. All rights reserved.",
+    terms: "Terms of Use",
+    privacy: "Privacy Policy",
+    cookies: "Cookies",
+
     // Common
     currency: "Currency",
     save: "Save",
@@ -238,6 +269,9 @@ const translations = {
     dark: "Dark"
   },
   es: {
+    // App Name
+    appName: "FinanceFlow",
+
     // Hero
     heroTitle: "Domina tus Finanzas con Claridad y Confianza", 
     heroSubtitle: "Herramientas y formación para controlar tu dinero como un profesional. Gestión inteligente y educación financiera.",
@@ -254,6 +288,7 @@ const translations = {
     dashboard: "Panel",
     language: "Idioma",
     theme: "Tema",
+    testimonials: "Testimonios",
 
     // Dashboard
     overview: "Resumen",
@@ -285,7 +320,7 @@ const translations = {
     actions: "Acciones",
 
     // Login
-    financialManagement: "Gestión Financiera",
+    financialManagement: "FinanceFlow",
     enterCredentials: "Introduce tus credenciales para acceder al panel",
     username: "Usuario",
     enterUsername: "Introduce tu usuario",
@@ -334,6 +369,18 @@ const translations = {
     mostPopular: "Más Popular",
     subscribe: "Suscribirse",
 
+    // FAQ
+    faqTitle: "Preguntas Frecuentes",
+    faqDescription: "Respuestas a las preguntas más comunes sobre nuestra plataforma",
+    stillHaveQuestions: "¿Aún tienes dudas?",
+    contactUs: "Contáctanos",
+
+    // Footer
+    copyright: "© 2024 FinanceFlow. Todos los derechos reservados.",
+    terms: "Términos de Uso",
+    privacy: "Política de Privacidad",
+    cookies: "Cookies",
+
     // Common
     currency: "Moneda",
     save: "Guardar",
@@ -350,6 +397,9 @@ const translations = {
     dark: "Oscuro"
   },
   fr: {
+    // App Name
+    appName: "FinanceFlow",
+
     // Hero
     heroTitle: "Maîtrisez vos Finances avec Clarté et Confiance",
     heroSubtitle: "Outils et formation pour contrôler votre argent comme un professionnel. Gestion intelligente et éducation financière.",
@@ -366,6 +416,7 @@ const translations = {
     dashboard: "Tableau de bord",
     language: "Langue",
     theme: "Thème",
+    testimonials: "Témoignages",
 
     // Dashboard  
     overview: "Aperçu",
@@ -397,7 +448,7 @@ const translations = {
     actions: "Actions",
 
     // Login
-    financialManagement: "Gestion Financière",
+    financialManagement: "FinanceFlow",
     enterCredentials: "Entrez vos identifiants pour accéder au tableau de bord",
     username: "Nom d'utilisateur",
     enterUsername: "Entrez votre nom d'utilisateur",
@@ -445,6 +496,18 @@ const translations = {
     monthly: "/mois",
     mostPopular: "Plus Populaire",
     subscribe: "S'abonner",
+
+    // FAQ
+    faqTitle: "Questions Fréquemment Posées",
+    faqDescription: "Réponses aux questions les plus communes sur notre plateforme",
+    stillHaveQuestions: "Vous avez encore des questions?",
+    contactUs: "Contactez-nous",
+
+    // Footer
+    copyright: "© 2024 FinanceFlow. Tous droits réservés.",
+    terms: "Conditions d'Utilisation",
+    privacy: "Politique de Confidentialité",
+    cookies: "Cookies",
 
     // Common
     currency: "Devise",
@@ -524,3 +587,5 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     </LanguageContext.Provider>
   );
 };
+
+export default LanguageProvider;
