@@ -2,18 +2,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/components/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, User, Globe, Monitor, Sun, Moon } from 'lucide-react';
-import { useLanguage } from '@/components/LanguageContext';
+import { User, Globe, Monitor, Sun, Moon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const { user, logout } = useAuth();
-  const { language, setLanguage, theme, setTheme } = useLanguage();
+  const { language, setLanguage, theme, setTheme, t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -49,21 +49,12 @@ const Profile = () => {
       <header className="bg-background shadow-sm border-b border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center py-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/dashboard')}
-              className="mr-4"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center">
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Perfil do Usuário</h1>
+                <h1 className="text-2xl font-bold text-foreground">{t('profile')}</h1>
                 <p className="text-sm text-muted-foreground">Gerencie suas configurações pessoais</p>
               </div>
             </div>
@@ -79,15 +70,15 @@ const Profile = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <User className="w-5 h-5" />
-                <span>Informações Pessoais</span>
+                <span>{t('personalInfo')}</span>
               </CardTitle>
               <CardDescription>
-                Atualize suas informações de perfil
+                {t('updateProfile')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="username">Nome de Usuário</Label>
+                <Label htmlFor="username">{t('username')}</Label>
                 <Input
                   id="username"
                   value={profileData.username}
@@ -97,7 +88,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <Label htmlFor="name">Nome Completo</Label>
+                <Label htmlFor="name">{t('fullName')}</Label>
                 <Input
                   id="name"
                   value={profileData.name}
@@ -107,7 +98,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -118,7 +109,7 @@ const Profile = () => {
               </div>
 
               <Button onClick={handleSaveProfile} className="w-full">
-                Salvar Alterações
+                {t('saveChanges')}
               </Button>
             </CardContent>
           </Card>
@@ -128,16 +119,16 @@ const Profile = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Globe className="w-5 h-5" />
-                <span>Preferências</span>
+                <span>{t('preferences')}</span>
               </CardTitle>
               <CardDescription>
-                Configurações de idioma e tema
+                {t('languageTheme')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Language Selection */}
               <div className="space-y-2">
-                <Label>Idioma</Label>
+                <Label>{t('language')}</Label>
                 <Select value={language} onValueChange={setLanguage}>
                   <SelectTrigger>
                     <Globe className="w-4 h-4 mr-2" />
@@ -155,7 +146,7 @@ const Profile = () => {
 
               {/* Theme Selection */}
               <div className="space-y-2">
-                <Label>Tema</Label>
+                <Label>{t('theme')}</Label>
                 <Select value={theme} onValueChange={setTheme}>
                   <SelectTrigger>
                     <SelectValue />
@@ -176,19 +167,35 @@ const Profile = () => {
                 </Select>
               </div>
 
+              {/* Currency Selection */}
+              <div className="space-y-2">
+                <Label>{t('currency')}</Label>
+                <Select defaultValue="EUR">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="EUR">Euro (€)</SelectItem>
+                    <SelectItem value="USD">Dólar ($)</SelectItem>
+                    <SelectItem value="GBP">Libra (£)</SelectItem>
+                    <SelectItem value="BRL">Real (R$)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Account Actions */}
               <div className="pt-4 border-t border-border">
-                <h3 className="font-medium text-foreground mb-3">Ações da Conta</h3>
+                <h3 className="font-medium text-foreground mb-3">{t('accountActions')}</h3>
                 <div className="space-y-2">
                   <Button variant="outline" className="w-full justify-start">
-                    Alterar Senha
+                    {t('changePassword')}
                   </Button>
                   <Button 
                     variant="destructive" 
                     className="w-full justify-start"
                     onClick={logout}
                   >
-                    Sair da Conta
+                    {t('logoutAccount')}
                   </Button>
                 </div>
               </div>

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -14,7 +13,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,24 +21,14 @@ const Login = () => {
     setTimeout(() => {
       const success = login(username, password);
       if (success) {
-        toast({
-          title: "Login realizado com sucesso!",
-          description: "Bem-vindo ao dashboard.",
-        });
         navigate('/dashboard');
-      } else {
-        toast({
-          title: "Erro no login",
-          description: "Credenciais inválidas. Tente novamente.",
-          variant: "destructive",
-        });
       }
       setIsLoading(false);
     }, 1000);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center login-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -85,8 +73,8 @@ const Login = () => {
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
-          <div className="mt-4 p-3 bg-gray-50 rounded-md">
-            <p className="text-sm text-gray-600 text-center">
+          <div className="mt-4 p-3 bg-muted rounded-md">
+            <p className="text-sm text-muted-foreground text-center">
               <strong>Credenciais de teste:</strong><br />
               Usuário: user123<br />
               Senha: user123
