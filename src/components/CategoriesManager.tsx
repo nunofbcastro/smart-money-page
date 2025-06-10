@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, Trash2 } from 'lucide-react';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
@@ -61,84 +61,88 @@ const CategoriesManager = () => {
               Organize suas receitas e despesas por categorias
             </CardDescription>
           </div>
-          <Button 
-            onClick={() => setShowForm(!showForm)}
-            className="flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Nova Categoria</span>
-          </Button>
+          <Dialog open={showForm} onOpenChange={setShowForm}>
+            <DialogTrigger asChild>
+              <Button className="flex items-center space-x-2">
+                <Plus className="w-4 h-4" />
+                <span>Nova Categoria</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Adicionar Nova Categoria</DialogTitle>
+                <DialogDescription>
+                  Crie uma nova categoria para organizar suas transações
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Nome da Categoria</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Ex: Alimentação, Salário"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="type">Tipo</Label>
+                  <Select 
+                    value={formData.type} 
+                    onValueChange={(value: 'income' | 'expense') => setFormData({ ...formData, type: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="income">Receita</SelectItem>
+                      <SelectItem value="expense">Despesa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="parent">Categoria Pai (opcional)</Label>
+                  <Select 
+                    value={formData.parentId} 
+                    onValueChange={(value) => setFormData({ ...formData, parentId: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Nenhuma (categoria principal)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="no-parent">Nenhuma (categoria principal)</SelectItem>
+                      {categories
+                        .filter(cat => cat.type === formData.type && !cat.parentId)
+                        .map(category => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))
+                      }
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex space-x-2">
+                  <Button type="submit">Criar Categoria</Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => {
+                      setShowForm(false);
+                      setFormData({ name: '', type: 'expense', parentId: '' });
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </CardHeader>
-
-        {showForm && (
-          <CardContent className="border-t">
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-              <div>
-                <Label htmlFor="name">Nome da Categoria</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Ex: Alimentação, Salário"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="type">Tipo</Label>
-                <Select 
-                  value={formData.type} 
-                  onValueChange={(value: 'income' | 'expense') => setFormData({ ...formData, type: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="income">Receita</SelectItem>
-                    <SelectItem value="expense">Despesa</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="parent">Categoria Pai (opcional)</Label>
-                <Select 
-                  value={formData.parentId} 
-                  onValueChange={(value) => setFormData({ ...formData, parentId: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Nenhuma (categoria principal)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Nenhuma (categoria principal)</SelectItem>
-                    {categories
-                      .filter(cat => cat.type === formData.type && !cat.parentId)
-                      .map(category => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))
-                    }
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex space-x-2">
-                <Button type="submit">Criar Categoria</Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => {
-                    setShowForm(false);
-                    setFormData({ name: '', type: 'expense', parentId: '' });
-                  }}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        )}
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -152,7 +156,7 @@ const CategoriesManager = () => {
           </CardHeader>
           <CardContent>
             {incomeCategories.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">
+              <p className="text-center text-muted-foreground py-8">
                 Nenhuma categoria de receita encontrada.
               </p>
             ) : (
@@ -198,7 +202,7 @@ const CategoriesManager = () => {
           </CardHeader>
           <CardContent>
             {expenseCategories.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">
+              <p className="text-center text-muted-foreground py-8">
                 Nenhuma categoria de despesa encontrada.
               </p>
             ) : (

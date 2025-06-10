@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, TrendingUp, TrendingDown, DollarSign, CreditCard, Users, PiggyBank } from 'lucide-react';
+import { LogOut, TrendingUp, TrendingDown, DollarSign, PiggyBank, User, Settings } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AddTransactionForm from '@/components/AddTransactionForm';
 import TransactionList from '@/components/TransactionList';
 import FinancialCharts from '@/components/FinancialCharts';
@@ -78,24 +79,40 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-background shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">€</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-xl">€</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard Financeiro</h1>
-                <p className="text-sm text-gray-500">Bem-vindo, {user?.username}!</p>
+                <h1 className="text-2xl font-bold text-foreground">Dashboard Financeiro</h1>
+                <p className="text-sm text-muted-foreground">Bem-vindo, {user?.username}!</p>
               </div>
             </div>
-            <Button variant="outline" onClick={handleLogout} className="flex items-center space-x-2">
-              <LogOut className="w-4 h-4" />
-              <span>Sair</span>
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span className="hidden sm:inline">{user?.username}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Perfil
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
@@ -103,14 +120,17 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="transactions">Transações</TabsTrigger>
-            <TabsTrigger value="accounts">Contas</TabsTrigger>
-            <TabsTrigger value="categories">Categorias</TabsTrigger>
-            <TabsTrigger value="family">Família</TabsTrigger>
-            <TabsTrigger value="analytics">Análises</TabsTrigger>
-          </TabsList>
+          {/* Mobile-optimized tabs */}
+          <div className="overflow-x-auto">
+            <TabsList className="grid w-full grid-cols-6 min-w-[600px] lg:min-w-0">
+              <TabsTrigger value="overview" className="text-xs sm:text-sm">Visão Geral</TabsTrigger>
+              <TabsTrigger value="transactions" className="text-xs sm:text-sm">Transações</TabsTrigger>
+              <TabsTrigger value="accounts" className="text-xs sm:text-sm">Contas</TabsTrigger>
+              <TabsTrigger value="categories" className="text-xs sm:text-sm">Categorias</TabsTrigger>
+              <TabsTrigger value="family" className="text-xs sm:text-sm">Família</TabsTrigger>
+              <TabsTrigger value="analytics" className="text-xs sm:text-sm">Análises</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="overview" className="space-y-6">
             {/* Stats Grid */}
@@ -120,10 +140,10 @@ const Dashboard = () => {
                 return (
                   <Card key={index}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-gray-600">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">
                         {stat.title}
                       </CardTitle>
-                      <Icon className="h-4 w-4 text-gray-400" />
+                      <Icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold">{stat.value}</div>

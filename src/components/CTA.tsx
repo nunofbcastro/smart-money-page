@@ -18,31 +18,43 @@ const CTA = () => {
       subtitle: "Join thousands of users who are already in complete control of their money.",
       cta: "Schedule Demo",
       trial: "14-day free trial"
+    },
+    es: {
+      title: "¿Listo para transformar tus finanzas?",
+      subtitle: "Únete a miles de usuarios que ya tienen control total de su dinero.",
+      cta: "Agendar Demo",
+      trial: "Prueba gratuita de 14 días"
+    },
+    fr: {
+      title: "Prêt à transformer vos finances?",
+      subtitle: "Rejoignez des milliers d'utilisateurs qui ont déjà le contrôle total de leur argent.",
+      cta: "Planifier une Démo",
+      trial: "Essai gratuit de 14 jours"
     }
   };
 
-  const text = content[language];
+  const text = content[language] || content.pt;
 
   return (
-    <section className="py-20 bg-gradient-to-r from-primary to-primary-dark">
+    <section className="py-20 bg-gradient-to-r from-primary to-primary/80">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold text-white mb-6">
+        <h2 className="text-4xl font-bold text-primary-foreground mb-6">
           {text.title}
         </h2>
-        <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
           {text.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             size="lg" 
-            className="bg-white text-primary hover:bg-gray-100 hover:text-primary-dark px-8 py-3 text-lg font-semibold transition-colors"
+            className="bg-background text-foreground hover:bg-background/90 hover:text-foreground px-8 py-3 text-lg font-semibold transition-colors"
           >
             {text.cta}
           </Button>
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold bg-transparent transition-colors"
+            className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary px-8 py-3 text-lg font-semibold bg-transparent transition-colors"
           >
             {text.trial}
           </Button>

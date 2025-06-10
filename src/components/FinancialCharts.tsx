@@ -2,163 +2,225 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useTransactions } from '@/contexts/TransactionContext';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+
+const COLORS = {
+  income: 'hsl(var(--primary))',
+  expense: 'hsl(var(--destructive))',
+  savings: 'hsl(var(--success))',
+  investments: 'hsl(var(--warning))',
+};
 
 const FinancialCharts = () => {
-  const { transactions, categories, accounts } = useTransactions();
+  const { transactions, accounts, categories } = useTransactions();
 
-  // Dados para gráfico de receitas vs despesas por mês
-  const monthlyData = transactions.reduce((acc, transaction) => {
-    const date = new Date(transaction.date);
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  // Monthly data
+  const getMonthlyData = () => {
+    const monthlyMap = new Map();
     
-    if (!acc[monthKey]) {
-      acc[monthKey] = { month: monthKey, income: 0, expense: 0 };
-    }
+    transactions.forEach(transaction => {
+      const date = new Date(transaction.date);
+      const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      
+      if (!monthlyMap.has(monthKey)) {
+        monthlyMap.set(monthKey, { month: monthKey, income: 0, expense: 0 });
+      }
+      
+      const monthData = monthlyMap.get(monthKey);
+      if (transaction.type === 'income') {
+        monthData.income += transaction.amount;
+      } else {
+        monthData.expense += transaction.amount;
+      }
+    });
     
-    if (transaction.type === 'income') {
-      acc[monthKey].income += transaction.amount;
-    } else {
-      acc[monthKey].expense += transaction.amount;
-    }
+    return Array.from(monthlyMap.values()).sort((a, b) => a.month.localeCompare(b.month));
+  };
+
+  // Category distribution
+  const getCategoryData = () => {
+    const categoryMap = new Map();
     
-    return acc;
-  }, {} as Record<string, { month: string; income: number; expense: number }>);
-
-  const monthlyChartData = Object.values(monthlyData).sort((a, b) => a.month.localeCompare(b.month));
-
-  // Dados para gráfico de pizza por categoria
-  const categoryData = categories.map(category => {
-    const total = transactions
-      .filter(t => t.categoryId === category.id)
-      .reduce((sum, t) => sum + t.amount, 0);
+    transactions
+      .filter(t => t.categoryId)
+      .forEach(transaction => {
+        const category = categories.find(c => c.id === transaction.categoryId);
+        const categoryName = category?.name || 'Outros';
+        
+        if (!categoryMap.has(categoryName)) {
+          categoryMap.set(categoryName, 0);
+        }
+        
+        categoryMap.set(categoryName, categoryMap.get(categoryName) + transaction.amount);
+      });
     
-    return {
-      name: category.name,
-      value: total,
-      type: category.type
-    };
-  }).filter(item => item.value > 0);
+    return Array.from(categoryMap.entries()).map(([name, value]) => ({
+      name,
+      value,
+      fill: COLORS.expense
+    }));
+  };
 
-  // Dados para gráfico de contas
-  const accountData = accounts.map(account => ({
-    name: account.name,
-    balance: account.balance,
-    type: account.type
-  }));
+  // Account distribution
+  const getAccountData = () => {
+    return accounts.map(account => ({
+      name: account.name,
+      value: account.balance,
+      fill: account.balance >= 0 ? COLORS.income : COLORS.expense
+    }));
+  };
 
-  const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const monthlyData = getMonthlyData();
+  const categoryData = getCategoryData();
+  const accountData = getAccountData();
 
   const chartConfig = {
     income: {
       label: "Receitas",
-      color: "hsl(var(--primary))",
+      color: COLORS.income,
     },
     expense: {
-      label: "Despesas",
-      color: "hsl(var(--destructive))",
+      label: "Despesas", 
+      color: COLORS.expense,
     },
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Gráfico de Receitas vs Despesas */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Receitas vs Despesas Mensais</CardTitle>
-          <CardDescription>Comparação mensal de entradas e saídas</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
-            <BarChart data={monthlyChartData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="income" fill="var(--color-income)" />
-              <Bar dataKey="expense" fill="var(--color-expense)" />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Monthly Income vs Expenses */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Receitas vs Despesas Mensais</CardTitle>
+            <CardDescription>
+              Comparação mensal das suas receitas e despesas
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="month" 
+                    className="text-xs fill-muted-foreground"
+                    tickFormatter={(value) => {
+                      const [year, month] = value.split('-');
+                      return `${month}/${year.slice(-2)}`;
+                    }}
+                  />
+                  <YAxis className="text-xs fill-muted-foreground" />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="income" fill={COLORS.income} name="Receitas" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="expense" fill={COLORS.expense} name="Despesas" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      {/* Gráfico de Pizza - Despesas por Categoria */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Despesas por Categoria</CardTitle>
-          <CardDescription>Distribuição dos gastos por categoria</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categoryData.filter(item => item.type === 'expense')}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label={({ name, value }) => `${name}: R$ ${value.toFixed(2)}`}
-                >
-                  {categoryData.filter(item => item.type === 'expense').map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                  ))}
-                </Pie>
-                <ChartTooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Category Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Distribuição por Categoria</CardTitle>
+            <CardDescription>
+              Como seus gastos estão distribuídos por categoria
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS.expense} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      {/* Gráfico de Saldos das Contas */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Saldos por Conta</CardTitle>
-          <CardDescription>Distribuição do patrimônio por tipo de conta</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
-            <BarChart data={accountData} layout="horizontal">
-              <XAxis type="number" />
-              <YAxis dataKey="name" type="category" width={100} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="balance" fill="hsl(var(--primary))" />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+        {/* Account Balances */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Saldos das Contas</CardTitle>
+            <CardDescription>
+              Distribuição do patrimônio por conta
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={accountData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="name" className="text-xs fill-muted-foreground" />
+                  <YAxis className="text-xs fill-muted-foreground" />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="value" fill={COLORS.income} name="Saldo" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      {/* Simulação de Crescimento */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Projeção de Crescimento</CardTitle>
-          <CardDescription>Simulação de crescimento patrimonial em 5 anos</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={[
-                  { year: 2024, conservative: 26350, moderate: 26350, aggressive: 26350 },
-                  { year: 2025, conservative: 27668, moderate: 28458, aggressive: 29512 },
-                  { year: 2026, conservative: 29051, moderate: 30735, aggressive: 33053 },
-                  { year: 2027, conservative: 30504, moderate: 33194, aggressive: 37019 },
-                  { year: 2028, conservative: 32029, moderate: 35849, aggressive: 41461 },
-                  { year: 2029, conservative: 33630, moderate: 38717, aggressive: 46437 }
-                ]}
-              >
-                <XAxis dataKey="year" />
-                <YAxis />
-                <ChartTooltip />
-                <Line type="monotone" dataKey="conservative" stroke="#82ca9d" name="Conservador" />
-                <Line type="monotone" dataKey="moderate" stroke="#8884d8" name="Moderado" />
-                <Line type="monotone" dataKey="aggressive" stroke="#ff7300" name="Agressivo" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Savings Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tendência de Economia</CardTitle>
+            <CardDescription>
+              Evolução do seu saldo mensal ao longo do tempo
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig} className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="month" 
+                    className="text-xs fill-muted-foreground"
+                    tickFormatter={(value) => {
+                      const [year, month] = value.split('-');
+                      return `${month}/${year.slice(-2)}`;
+                    }}
+                  />
+                  <YAxis className="text-xs fill-muted-foreground" />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="income" 
+                    stroke={COLORS.income} 
+                    strokeWidth={2}
+                    name="Receitas"
+                    dot={{ fill: COLORS.income, strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="expense" 
+                    stroke={COLORS.expense} 
+                    strokeWidth={2}
+                    name="Despesas"
+                    dot={{ fill: COLORS.expense, strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

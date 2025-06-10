@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Plus } from 'lucide-react';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
@@ -142,7 +141,7 @@ const AddTransactionForm = () => {
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Sem categoria</SelectItem>
+                  <SelectItem value="no-category">Sem categoria</SelectItem>
                   {filteredCategories.map(category => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
@@ -182,7 +181,7 @@ const AddTransactionForm = () => {
                     <SelectValue placeholder="Selecione um membro" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Não especificado</SelectItem>
+                    <SelectItem value="not-specified">Não especificado</SelectItem>
                     {familyMembers.map(member => (
                       <SelectItem key={member.id} value={member.id}>
                         {member.name}
