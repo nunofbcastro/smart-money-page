@@ -35,14 +35,14 @@ const CTA = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             size="lg" 
-            className="bg-white text-primary hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
+            className="bg-white text-primary hover:bg-gray-100 hover:text-primary-dark px-8 py-3 text-lg font-semibold transition-colors"
           >
             {text.cta}
           </Button>
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold bg-transparent"
+            className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold bg-transparent transition-colors"
           >
             {text.trial}
           </Button>
